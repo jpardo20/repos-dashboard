@@ -163,9 +163,99 @@ git push -u origin feature/nova-funcionalitat
 
 4. Crear Pull Request cap a `main`
 
+-
+
 ---
 
-# Futores millores
+# Project goals
+
+Aquest projecte vol ser una eina lleugera per monitoritzar
+l'activitat de repositoris d'alumnes utilitzant l'API de GitHub.
+
+
+---
+
+
+# Development Workflow
+
+Aquest repositori utilitza un flux de treball basat en **feature branches i Pull Requests**.
+
+La branca `main` està protegida i no s'hi fan commits directes.
+
+## Estratègia de branques
+
+```
+main → branca estable
+
+feature/* → noves funcionalitats
+fix/* → correccions
+```
+
+## Flux de treball
+
+1. Actualitzar `main`
+
+```
+git checkout main
+git pull
+```
+
+2. Crear una nova branca de funcionalitat
+
+```
+git checkout -b feature/nom-de-la-funcionalitat
+```
+
+3. Desenvolupar i fer commits
+
+```
+git add .
+git commit -m "Describe the change"
+```
+
+4. Pujar la branca al remot
+
+```
+git push -u origin feature/nom-de-la-funcionalitat
+```
+
+5. Crear el Pull Request
+
+```
+gh pr create --editor
+```
+
+6. Fer el merge del PR
+
+```
+gh pr merge --squash --admin
+```
+
+7. Netejar la branca local
+
+```
+git checkout main
+git pull
+git branch -d feature/nom-de-la-funcionalitat
+```
+
+8. Esborrar la branca remota
+
+```
+git push origin --delete feature/nom-de-la-funcionalitat
+```
+
+## Notes
+
+- `main` és sempre la versió estable del projecte.
+- Les noves funcionalitats es desenvolupen en branques `feature/*`.
+- Els canvis s'integren a `main` mitjançant Pull Requests.
+
+Aquest flux de treball permet mantenir l'historial net i facilita la revisió dels canvis.
+
+--
+
+# Futures millores
 
 Possibles evolucions del dashboard:
 
