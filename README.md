@@ -9,6 +9,8 @@ Dashboard local per monitoritzar l'activitat de repositoris GitHub d'alumnes.
 
 ![Dashboard preview](docs/images/dashboard.png)
 
+Example view showing recent repository activity grouped by project.
+
 Permet obtenir una visió ràpida de:
 
 - activitat recent dels repositoris
@@ -29,6 +31,8 @@ No publicar el token GitHub utilitzat per accedir a repositoris privats.
 - Detecta repos sense activitat recent
 - Comptadors globals i per projecte
 - Ordenació per qualsevol columna
+- Agregació de commits per **email d'estudiant**
+- Ignora commits de **professors, bots o comptes configurats**
 - Dashboard lleuger (HTML + JS)
 - Pensat per executar-se localment
 
@@ -82,8 +86,23 @@ js/config.js
 Contingut:
 
 ```js
-const GITHUB_TOKEN = "your_token_here";
+window.GITHUB_TOKEN = "your_token_here";
+
+window.IGNORE_LOGINS = [
+  "teacher-username",
+  "github-classroom[bot]"
+];
+
+window.IGNORE_EMAILS = [
+  "teacher@email.com"
+];
 ```
+
+Aquestes opcions permeten:
+
+- ignorar commits del professor
+- ignorar bots (GitHub Classroom, dependabot, etc.)
+- evitar que l'activitat del professor afecti les estadístiques dels alumnes
 
 ---
 
@@ -262,8 +281,8 @@ Aquest flux de treball permet mantenir l'historial net i facilita la revisió de
 
 Possibles evolucions del dashboard:
 
-- anàlisi de contributors per repositori
-- commits dels últims 7 dies
+- visualització dels **top contributors per repositori**
+- commits dels últims 7 dies per alumne
 - detecció automàtica de repos d'una organització
 - gràfics d'activitat
 - vista per alumne
