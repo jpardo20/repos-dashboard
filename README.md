@@ -1,6 +1,13 @@
 # Repos Dashboard
 
+![JavaScript](https://img.shields.io/badge/Language-JavaScript-yellow)
+![GitHub API](https://img.shields.io/badge/API-GitHub-blue)
+![Dashboard](https://img.shields.io/badge/Type-Local%20Dashboard-green)
+![GitHub last commit](https://img.shields.io/github/last-commit/jpardo20/repos-dashboard)
+
 Dashboard local per monitoritzar l'activitat de repositoris GitHub d'alumnes.
+
+![Dashboard preview](docs/images/dashboard.png)
 
 Permet obtenir una visió ràpida de:
 
@@ -11,12 +18,12 @@ Permet obtenir una visió ràpida de:
 
 Aquest projecte s'utilitza principalment per al seguiment de treballs d'alumnes en projectes de programació.
 
-⚠️ Aquest projecte està pensat per executar-se localment.  
+Aquest projecte està pensat per executar-se localment.  
 No publicar el token GitHub utilitzat per accedir a repositoris privats.
 
 ---
 
-# Característiques
+## Característiques
 
 - Consulta l'activitat dels repos mitjançant l'API de GitHub
 - Detecta repos sense activitat recent
@@ -27,9 +34,9 @@ No publicar el token GitHub utilitzat per accedir a repositoris privats.
 
 ---
 
-# Estructura del projecte
+## Estructura del projecte
 
-```
+```text
 repos-dashboard
 │
 ├── css/
@@ -48,9 +55,9 @@ repos-dashboard
 
 ---
 
-# Configuració
+## Configuració
 
-## 1️⃣ Crear token GitHub
+### 1. Crear token GitHub
 
 Crear un token personal a:
 
@@ -58,33 +65,33 @@ https://github.com/settings/tokens
 
 Permisos necessaris:
 
-```
+```text
 repo
 ```
 
 ---
 
-## 2️⃣ Crear fitxer `config.js`
+### 2. Crear fitxer `config.js`
 
 Aquest fitxer **no es versiona** (està al `.gitignore`).
 
-```
+```bash
 js/config.js
 ```
 
 Contingut:
 
-```javascript
+```js
 const GITHUB_TOKEN = "your_token_here";
 ```
 
 ---
 
-## 3️⃣ Configurar repositoris
+### 3. Configurar repositoris
 
 Editar:
 
-```
+```bash
 data/repos.json
 ```
 
@@ -105,13 +112,13 @@ Exemple:
 
 Format:
 
-```
+```bash
 owner/repository
 ```
 
 ---
 
-# Execució
+## Execució
 
 Executar el projecte amb qualsevol servidor local.
 
@@ -123,129 +130,125 @@ python3 -m http.server
 
 i obrir:
 
-```link
+```text
 http://localhost:8000
 ```
 
 ---
 
-# Workflow de desenvolupament
-
-El projecte segueix un flux de treball basat en **Pull Requests**.
-
-## Branques
-
-```
-main → codi estable
-feature/* → noves funcionalitats
-```
-
-## Flux de treball
-
-1. Crear branca de funcionalitat
-
-```
-git checkout -b feature/nova-funcionalitat
-```
-
-2. Desenvolupar i fer commits
-
-```
-git add .
-git commit -m "Add new feature"
-```
-
-3. Pujar la branca
-
-```
-git push -u origin feature/nova-funcionalitat
-```
-
-4. Crear Pull Request cap a `main`
-
--
-
----
-
-# Project goals
+## Project goals
 
 Aquest projecte vol ser una eina lleugera per monitoritzar
 l'activitat de repositoris d'alumnes utilitzant l'API de GitHub.
 
+---
+
+## Workflow de desenvolupament
+
+El projecte segueix un flux de treball basat en **Pull Requests**.
+
+### Branques
+
+```bash
+main → codi estable
+feature/* → noves funcionalitats
+```
+
+### Flux de treball
+
+1. Crear branca de funcionalitat
+
+    ```bash
+    git checkout -b feature/nova-funcionalitat
+    ```
+
+1. Desenvolupar i fer commits
+
+    ```bash
+    git add .
+    git commit -m "Add new feature"
+    ```
+
+1. Pujar la branca
+
+    ```bash
+    git push -u origin feature/nova-funcionalitat
+    ```
+
+1. Crear Pull Request cap a `main`
 
 ---
 
-
-# Development Workflow
+## Development Workflow
 
 Aquest repositori utilitza un flux de treball basat en **feature branches i Pull Requests**.
 
 La branca `main` està protegida i no s'hi fan commits directes.
 
-## Estratègia de branques
+### Estratègia de branques
 
-```
+```bash
 main → branca estable
 
 feature/* → noves funcionalitats
 fix/* → correccions
 ```
 
-## Flux de treball
+### Flux de treball
 
 1. Actualitzar `main`
 
-```
-git checkout main
-git pull
-```
+    ```bash
+    git checkout main
+    git pull
+    ```
 
-2. Crear una nova branca de funcionalitat
+1. Crear una nova branca de funcionalitat
 
-```
-git checkout -b feature/nom-de-la-funcionalitat
-```
+    ```bash
+    git checkout -b feature/nom-de-la-funcionalitat
+    ```
 
-3. Desenvolupar i fer commits
+1. Desenvolupar i fer commits
 
-```
-git add .
-git commit -m "Describe the change"
-```
+    ```bash
+    git add .
+    git commit -m "Describe the change"
+    ```
 
-4. Pujar la branca al remot
+1. Pujar la branca al remot
 
-```
-git push -u origin feature/nom-de-la-funcionalitat
-```
+    ```bash
+    git push -u origin feature/nom-de-la-funcionalitat
+    ```
 
-5. Crear el Pull Request
+1. Crear el Pull Request
 
-```
-gh pr create --editor
-```
+    ```bash
+    gh pr create --editor
+    ```
 
-6. Fer el merge del PR
+1. Fer el merge del PR
 
-```
-gh pr merge --squash --admin
-```
+    ```bash
+    gh pr merge --squash --admin
+    ```
 
-7. Netejar la branca local
+1. Netejar la branca local
 
-```
-git checkout main
-git pull
-git branch -d feature/nom-de-la-funcionalitat
-```
+    ```bash
+    git checkout main
+    git pull
+    git branch -d feature/nom-de-la-funcionalitat
+    ```
 
-8. Esborrar la branca remota
+1. Esborrar la branca remota
 
-```
-git push origin --delete feature/nom-de-la-funcionalitat
-```
+    ```bash
+    git push origin --delete feature/nom-de-la-funcionalitat
+    ```
 
-## Notes
+### Notes
 
 - `main` és sempre la versió estable del projecte.
 - Les noves funcionalitats es desenvolupen en branques `feature/*`.
@@ -255,7 +258,7 @@ Aquest flux de treball permet mantenir l'historial net i facilita la revisió de
 
 --
 
-# Futures millores
+## Futures millores
 
 Possibles evolucions del dashboard:
 
@@ -267,6 +270,6 @@ Possibles evolucions del dashboard:
 
 ---
 
-# Autor
+## Autor
 
 Joan Pardo
