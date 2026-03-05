@@ -1,12 +1,15 @@
 {
   "SMX Sprint T2": [
-    "jpardo20/smx-sprint-t2-clemente825",
-    "jpardo20/smx-sprint-t2-kristina-2008",
-    "jpardo20/smx-sprint-t2-lorena639",
-    "jpardo20/smx-sprint-t2-merouan208"
+    "SMX-2025-2027/smx-sprint-t2-clemente825",
+    "SMX-2025-2027/smx-sprint-t2-kristina-2008",
+    "SMX-2025-2027/smx-sprint-t2-lorena639",
+    "SMX-2025-2027/smx-sprint-t2-merouan208"
   ],
-  "DAM PhoenixTech": [
-    "jpardo20/phoenixtech-grup1",
-    "jpardo20/phoenixtech-grup2"
+
+  "SMX Gestio Incidencies": [
+    "juanmagape/abe-galan-gestio-incidencies",
+    "bertaarenas/arenas-ciurana-rincon-gestio-incidencies",
+    "karlosruizmo-stack/gonzalez-ruiz-gestio-incidencies",
+    "javiitc/name-quilca-titua-a-gestio-incidencies"
   ]
 }

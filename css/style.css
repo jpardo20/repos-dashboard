@@ -16,3 +16,22 @@ td, th {
 th {
   background: #eee;
 }
+
+.inactive {
+  background-color: #ffe5e5;
+}
+
+.inactive td {
+  color: #b30000;
+  font-weight: bold;
+}
+
+#summary {
+  margin: 10px 0 20px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.summary-active { color: #2e7d32; }
+.summary-alert { color: #f9a825; }
+.summary-inactive { color: #b30000; }
