@@ -1,5 +1,16 @@
+# Changelog
+
 ## v1.1
 
-- aggregate commits by student email
-- ignore teacher accounts
-- ignore bot commits
+### Improvements
+
+- Aggregate commits by student email
+- Ignore teacher accounts
+- Ignore bot commits
+
+## v1.0
+
+### Initial version
+
+- Basic repository activity dashboard
+- Commit aggregation
