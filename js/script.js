@@ -30,18 +30,17 @@ function shouldIgnore(identity, commitItem) {
 
     const ignoreLogins = Array.isArray(globalThis.IGNORE_LOGINS) ? globalThis.IGNORE_LOGINS : [];
     const ignoreEmails = Array.isArray(globalThis.IGNORE_EMAILS) ? globalThis.IGNORE_EMAILS : [];
-    const ignoreLabels = Array.isArray(globalThis.IGNORE_LOGINS) ? globalThis.IGNORE_LOGINS : [];
+    const ignoreLabels = Array.isArray(globalThis.IGNORE_LABELS) ? globalThis.IGNORE_LABELS : [];
 
     if (ignoreLogins.map(s => s.toLowerCase()).includes(login)) return true;
     if (ignoreEmails.map(s => s.toLowerCase()).includes(email)) return true;
     if (ignoreLabels.map(s => s.toLowerCase()).includes(label)) return true;
 
-    // també ignora si el label està dins l'email noreply (ex: 12345+user@users.noreply...)
     if (email.includes("+")) {
-    const userInNoReply = email.split("+")[1].split("@")[0];
-    if (ignoreLogins.map(s => s.toLowerCase()).includes(userInNoReply.toLowerCase())) return true;
+        const userInNoReply = email.split("+")[1].split("@")[0];
+        if (ignoreLogins.map(s => s.toLowerCase()).includes(userInNoReply.toLowerCase())) return true;
     }
-    // ignorar automàticament qualsevol login que acabi amb [bot].
+
     if (login && login.endsWith("[bot]")) return true;
 
     return false;
@@ -128,11 +127,11 @@ function aggregateCommitsByStudent(commitItems) {
 async function loadRepos() {
 
     if (DEBUG) {
-    console.log("DEBUG config:", {
-        hasToken: typeof GITHUB_TOKEN === "string" && GITHUB_TOKEN.length > 0,
-        IGNORE_LOGINS: globalThis.IGNORE_LOGINS,
-        IGNORE_EMAILS: globalThis.IGNORE_EMAILS
-    });
+        console.log("DEBUG config:", {
+            hasToken: typeof GITHUB_TOKEN === "string" && GITHUB_TOKEN.length > 0,
+            IGNORE_LOGINS: globalThis.IGNORE_LOGINS,
+            IGNORE_EMAILS: globalThis.IGNORE_EMAILS
+        });
     }
 
     const ALERT_DAYS = 2;      // groc fins a 2 dies
@@ -171,9 +170,10 @@ async function loadRepos() {
         table.appendChild(header);
         container.appendChild(table);
 
-        for (const repo of data[group]) {
+        for (const repoName of data[group]) {
 
-            const fullRepo = repo;
+            const repo = new Repository(repoName);
+            const fullRepo = repo.getFullName();
 
             const since = new Date();
             since.setDate(since.getDate() - 7);
@@ -182,32 +182,32 @@ async function loadRepos() {
             const commits7d = await fetchCommitsSince(fullRepo, sinceISO);
 
             const commits7dFiltered = commits7d.filter(c => {
-            const ident = normalizeIdentity(c);
-            return !shouldIgnore(ident, c);
+                const ident = normalizeIdentity(c);
+                return !shouldIgnore(ident, c);
             });
 
             const agg = aggregateCommitsByStudent(commits7dFiltered);
 
             if (DEBUG && commits7d.length > 0) {
-            console.log("DEBUG repo:", fullRepo, "commits7d:", commits7d.length);
+                console.log("DEBUG repo:", fullRepo, "commits7d:", commits7d.length);
 
-            // mostra 5 commits d'exemple
-            commits7d.slice(0, 5).forEach((c, i) => {
-                const ident = normalizeIdentity(c);
-                const ignored = shouldIgnore(ident, c);
+                // mostra 5 commits d'exemple
+                commits7d.slice(0, 5).forEach((c, i) => {
+                    const ident = normalizeIdentity(c);
+                    const ignored = shouldIgnore(ident, c);
 
-                console.log(`DEBUG sample #${i + 1}`, {
-                login: c?.author?.login,
-                commitName: c?.commit?.author?.name,
-                commitEmail: c?.commit?.author?.email,
-                identKey: ident.key,
-                identLabel: ident.label,
-                ignored
+                    console.log(`DEBUG sample #${i + 1}`, {
+                        login: c?.author?.login,
+                        commitName: c?.commit?.author?.name,
+                        commitEmail: c?.commit?.author?.email,
+                        identKey: ident.key,
+                        identLabel: ident.label,
+                        ignored
+                    });
                 });
-            });
 
-            // IMPORTANT: només ho fem per 1 repo
-            // (si vols, comenta aquesta línia després)
+                // IMPORTANT: només ho fem per 1 repo
+                // (si vols, comenta aquesta línia després)
             }
 
 
@@ -273,7 +273,7 @@ async function loadRepos() {
                 row.classList.add(rowClass);
             }
 
-            row.dataset.repo = repo;
+            row.dataset.repo = repo.getFullName();
             row.dataset.author = last.commit.author.name;
             row.dataset.date = last.commit.author.date.substring(0, 10);
             row.dataset.days = diffDays;
@@ -281,7 +281,7 @@ async function loadRepos() {
             row.dataset.commits7d = commits7dCount
 
             row.innerHTML =
-                "<td><a href='https://github.com/" + fullRepo + "' target='_blank'>" + repo + "</a></td>" +
+                "<td><a href='https://github.com/" + fullRepo + "' target='_blank'>" + repo.getName() + "</a></td>" +
                 "<td>" + last.commit.author.name + "</td>" +
                 "<td>" + last.commit.author.date.substring(0, 10) + "</td>" +
                 "<td>" + daysDisplay + "</td>" +
