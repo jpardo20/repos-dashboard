@@ -96,6 +96,10 @@ Examples of evidence include:
 
 These evidences allow the dashboard to analyze student activity and participation.
 
+> Note: In the current implementation the Evidence concept is implicit
+> in the metrics computed from repository activity. A dedicated Evidence
+> component may be introduced in future versions of the system.
+
 ---
 
 # Dashboard
