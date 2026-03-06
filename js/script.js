@@ -1,3 +1,5 @@
+const github = new GitHubClient(GITHUB_TOKEN);
+
 function normalizeIdentity(commitItem) {
     const email = commitItem?.commit?.author?.email || "";
     const name = commitItem?.commit?.author?.name || "";
@@ -46,52 +48,7 @@ function shouldIgnore(identity, commitItem) {
     return false;
 }
 
-function enableSorting() {
-    const headers = document.querySelectorAll("th[data-sort]");
 
-    headers.forEach(header => {
-        let asc = true;
-        header.addEventListener("click", () => {
-            const table = header.closest("table");
-            const rows = Array.from(table.querySelectorAll("tr")).slice(1);
-            const key = header.dataset.sort;
-            rows.sort((a, b) => {
-                let v1 = a.dataset[key];
-                let v2 = b.dataset[key];
-                if (key === "days") {
-                    v1 = Number(v1);
-                    v2 = Number(v2);
-                }
-                if (v1 < v2) return asc ? -1 : 1;
-                if (v1 > v2) return asc ? 1 : -1;
-                return 0;
-            });
-            rows.forEach(r => table.appendChild(r));
-            asc = !asc;
-        });
-    });
-}
-
-async function fetchCommitsSince(fullRepo, sinceISO) {
-    let page = 1;
-    const all = [];
-
-    while (page <= 3) {
-        const url = `https://api.github.com/repos/${fullRepo}/commits?since=${encodeURIComponent(sinceISO)}&per_page=100&page=${page}`;
-        const res = await fetch(url, {
-            headers: { "Authorization": "Bearer " + GITHUB_TOKEN }
-        });
-
-        const data = await res.json();
-        if (!Array.isArray(data) || data.length === 0) break;
-
-        all.push(...data);
-        if (data.length < 100) break;
-        page++;
-    }
-
-    return all;
-}
 
 function aggregateCommitsByStudent(commitItems) {
     const counts = new Map();
@@ -135,7 +92,7 @@ async function loadRepos() {
     }
 
     const ALERT_DAYS = 2;      // groc fins a 2 dies
-    const INACTIVE_DAYS = 5;   // vermell a partir de 6 dies
+    
 
     let activeCount = 0;
     let alertCount = 0;
@@ -145,6 +102,10 @@ async function loadRepos() {
     const data = await reposFile.json();
 
     const container = document.getElementById("content");
+
+    const since = new Date();
+    since.setDate(since.getDate() - 7);
+    const sinceISO = since.toISOString();
 
     for (const group in data) {
 
@@ -170,16 +131,15 @@ async function loadRepos() {
         table.appendChild(header);
         container.appendChild(table);
 
+
+
         for (const repoName of data[group]) {
 
             const repo = new Repository(repoName);
             const fullRepo = repo.getFullName();
 
-            const since = new Date();
-            since.setDate(since.getDate() - 7);
-            const sinceISO = since.toISOString();
 
-            const commits7d = await fetchCommitsSince(fullRepo, sinceISO);
+            const commits7d = await github.fetchCommitsSince(fullRepo, sinceISO);
 
             const commits7dFiltered = commits7d.filter(c => {
                 const ident = normalizeIdentity(c);
@@ -215,16 +175,7 @@ async function loadRepos() {
             const commits7dCount = agg.total;
             const commits7dTop = agg.topText || "-";
 
-            const response = await fetch(
-                "https://api.github.com/repos/" + fullRepo + "/commits",
-                {
-                    headers: {
-                        "Authorization": "Bearer " + GITHUB_TOKEN
-                    }
-                }
-            );
-
-            const commits = await response.json();
+            const commits = await github.fetchRepoCommits(fullRepo);
 
             if (!Array.isArray(commits) || commits.length === 0) {
                 continue;
