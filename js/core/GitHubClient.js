@@ -4,10 +4,10 @@ class GitHubClient {
         this.token = token;
     }
 
-    async fetchCommits(repoFullName) {
+    async fetchRepoCommits(fullRepo) {
 
-        const response = await fetch(
-            "https://api.github.com/repos/" + repoFullName + "/commits",
+        const res = await fetch(
+            "https://api.github.com/repos/" + fullRepo + "/commits",
             {
                 headers: {
                     "Authorization": "Bearer " + this.token
@@ -15,21 +15,48 @@ class GitHubClient {
             }
         );
 
-        return await response.json();
+        return await res.json();
     }
 
-    async fetchCommitsSince(repoFullName, sinceISO) {
+    async fetchCommitsSince(fullRepo, sinceISO) {
 
-        const response = await fetch(
-            "https://api.github.com/repos/" + repoFullName + "/commits?since=" + sinceISO,
-            {
+        let page = 1;
+        const all = [];
+
+        while (page <= 3) {
+
+            const url =
+                "https://api.github.com/repos/" +
+                fullRepo +
+                "/commits?since=" +
+                encodeURIComponent(sinceISO) +
+                "&per_page=100&page=" +
+                page;
+
+            const res = await fetch(url, {
                 headers: {
                     "Authorization": "Bearer " + this.token
                 }
-            }
-        );
+            });
 
-        return await response.json();
+            const data = await res.json();
+
+            if (!Array.isArray(data) || data.length === 0) {
+                break;
+            }
+
+            all.push(...data);
+
+            if (data.length < 100) {
+                break;
+            }
+
+            page++;
+
+        }
+
+        return all;
+
     }
 
 }
